@@ -1,14 +1,30 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StyleSheet, FlatList } from "react-native";
+import ApodListItem from "../src/components/ApodListItem";
+// import apodsjson from "../src/data/apods.json";
+import { useState } from "react";
+import FullScreenImage from "../src/components/FullScreenImage";
+import { Apod } from "../src/types";
+import apodsJson from "../src/data/apods.json";
+
 export default function App() {
+  const [apods, setApods] = useState<Apod[]>(apodsJson);
+  const [activePicture, setActivePicture] = useState<string>(null);
+
+  useState(() => {});
+
   return (
-    <SafeAreaProvider>
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <StatusBar style="auto" />
-      </View>
-    </SafeAreaProvider>
+    <>
+      <FlatList
+        data={apods}
+        renderItem={({ item }) => (
+          <ApodListItem
+            apod={item}
+            onImagePress={() => setActivePicture(item.url)}
+          />
+        )}
+      />
+      <FullScreenImage url={activePicture} onClose={() => setActivePicture} />
+    </>
   );
 }
 
